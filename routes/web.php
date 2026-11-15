@@ -20,7 +20,6 @@ $router->get('/', function () use ($router) {
 // Post
 $router->get('/posts', 'PostsController@index');
 
-// Post
 $router->get('/posts', 'PostsController@index');
 $router->post('/posts', 'PostsController@store');
 
@@ -35,16 +34,31 @@ $router->post('/posts', 'PostsController@store');
 $router->get('/post/{id}', 'PostsController@show');
 $router->put('/post/{id}', 'PostsController@update');
 
-// Post
-$router->get('/posts', 'PostsController@index');
-$router->post('/posts', 'PostsController@store');
-$router->get('/post/{id}', 'PostsController@show');
-$router->put('/post/{id}', 'PostsController@update');
-$router->delete('/post/{id}', 'PostsController@destroy');
+// Route yang wajib login
+$router->group(['middleware' => ['auth']], function () use ($router) {
+    $router->delete('/auth/logout', 'AuthController@logout');
 
+    $router->get('/posts', 'PostsController@index');
+    $router->post('/posts', 'PostsController@store');
+    $router->get('/post/{id}', 'PostsController@show');
+    $router->put('/post/{id}', 'PostsController@update');
+    $router->delete('/post/{id}', 'PostsController@destroy');
+
+    $router->get('/notes', 'NotesController@index');
+    $router->post('/notes', 'NotesController@store');
+    $router->get('/note/{id}', 'NotesController@show');
+    $router->put('/note/{id}', 'NotesController@update');
+    $router->delete('/note/{id}', 'NotesController@destroy');
+});
 // Product
 $router->get('/products', 'ProductsController@index');
 $router->post('/products', 'ProductsController@store');
 $router->get('/product/{id}', 'ProductsController@show');
 $router->put('/product/{id}', 'ProductsController@update');
 $router->delete('/product/{id}', 'ProductsController@destroy');
+
+// authentication
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('/register', 'AuthController@register');
+    $router->post('/login', 'AuthController@login');
+});
